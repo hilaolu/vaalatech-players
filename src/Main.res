@@ -6,8 +6,7 @@ let createVarIntBuffer = value => {
   let rec reduce = (val, buf: array<int>) => {
     switch val {
     | val if val >= 0b10000000 => {
-        let temp = land(val, 0b01111111)
-        let temp = lor(temp, 0b10000000)
+        let temp = val |> land(_, 0b01111111) |> lor(_, 0b10000000)
         let val = lsr(val, 7)
         let _ = Js.Array2.push(buf, temp)
         reduce(val, buf)
@@ -39,21 +38,21 @@ let createStringBuffer = value => {
   Buffer.concat([lengthBuffer, stringBuffer])
 }
 
-let removeVarIntHead = (arr: array<int>) => {
+let rec removeVarIntHead = (arr: array<int>) => {
   switch arr {
   | [] => []
-  | arr if Array.getUnsafe(arr, 0) >= 128 => Array.sliceToEnd(arr, ~start=1)
+  | arr if Array.getUnsafe(arr, 0) >= 128 => removeVarIntHead(Array.sliceToEnd(arr, ~start=1))
   | _ => Array.sliceToEnd(arr, ~start=1) // we have reach the end
   }
 }
 
 let fetch = async request => {
   let {readable, writable} = Worker.connect("home.vaala.tech:25565")
-  let writer = writable |> Worker.WritableStream.getWriter
-  let writer = writer |> Worker.WritableStreamDefaultWriter.write
+  let writer =
+    writable |> Worker.WritableStream.getWriter |> Worker.WritableStreamDefaultWriter.write
 
-  let reader = readable |> Worker.ReadableStream.getReader
-  let reader = reader |> Worker.ReadableStreamDefaultReader.read
+  let reader =
+    readable |> Worker.ReadableStream.getReader |> Worker.ReadableStreamDefaultReader.read
 
   let b = [
     createVarIntBuffer(0),
@@ -69,7 +68,7 @@ let fetch = async request => {
   let b = b |> createPacket
   let _ = await (b |> writer)
 
-  let {done, value} = await reader
+  let {value} = await reader
   let response =
     value
     |> removeVarIntHead
