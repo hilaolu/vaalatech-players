@@ -1,0 +1,5 @@
+name = "players"
+compatibility_date = "2023-12-28"
+type = "webpack"
+node_compat=true
+main="src/Main.js"

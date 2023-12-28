@@ -1,18 +1,25 @@
 {
-  "name": "rescript-project-template",
-  "version": "0.0.1",
-  "keywords": [
-    "rescript"
-  ],
-  "license": "MIT",
-  "author": "",
-  "scripts": {
-    "res:build": "rescript",
-    "res:clean": "rescript clean",
-    "res:dev": "rescript build -w"
-  },
-  "dependencies": {
-    "@rescript/core": "*",
-    "rescript": "*"
-  }
+    "name": "rescript-project-template",
+    "version": "0.0.1",
+    "keywords": [
+        "rescript"
+    ],
+    "license": "MIT",
+    "author": "",
+    "scripts": {
+        "res:build": "rescript",
+        "res:clean": "rescript clean",
+        "res:dev": "rescript build -w"
+    },
+    "dependencies": {
+        "@rescript/core": "*",
+        "buffer": "^6.0.3",
+        "minecraft-server-util": "^5.4.4",
+        "minecraft-status": "^1.1.0",
+        "rescript-nodejs": "^16.0.0"
+    },
+    "devDependencies": {
+        "rescript": "^10.1.4",
+        "wrangler": "^3.22.1"
+    }
 }
